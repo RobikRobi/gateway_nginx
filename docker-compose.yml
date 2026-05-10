@@ -1,0 +1,14 @@
+services:
+  gateway_nginx:
+    image: nginx:1.27-alpine
+    container_name: gateway_nginx
+    restart: unless-stopped
+    ports:
+      - "${GATEWAY_PORT:-8081}:8081"
+    environment:
+      USERS_UPSTREAM_HOST: ${USERS_UPSTREAM_HOST:?Set USERS_UPSTREAM_HOST to users nginx host}
+      USERS_UPSTREAM_PORT: ${USERS_UPSTREAM_PORT:-8080}
+      PRODUCTS_UPSTREAM_HOST: ${PRODUCTS_UPSTREAM_HOST:?Set PRODUCTS_UPSTREAM_HOST to products nginx host}
+      PRODUCTS_UPSTREAM_PORT: ${PRODUCTS_UPSTREAM_PORT:-8080}
+    volumes:
+      - ./gateway.conf.template:/etc/nginx/templates/default.conf.template:ro
